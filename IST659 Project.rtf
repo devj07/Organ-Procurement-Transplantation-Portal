@@ -1,0 +1,274 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 --DOWN \par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_User_User_ID')\par
+        ALTER TABLE [User] DROP CONSTRAINT fk_User_User_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Doctor_Organization_ID')\par
+        ALTER TABLE Doctor DROP CONSTRAINT fk_Doctor_Organization_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Patient_Doctor_ID')\par
+        ALTER TABLE Patient DROP CONSTRAINT fk_Patient_Doctor_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Donor_Organization_ID')\par
+        ALTER TABLE Donor DROP CONSTRAINT fk_Donor_Organization_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Donor_User_ID')\par
+        ALTER TABLE Donor DROP CONSTRAINT fk_Donor_User_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Organ_available_Donor_ID')\par
+        ALTER TABLE Organ_available DROP CONSTRAINT fk_Organ_available_Donor_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Transaction_Donor_ID')\par
+        ALTER TABLE [Transaction] DROP CONSTRAINT fk_Transaction_Donor_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Transaction_Patient_ID')\par
+        ALTER TABLE [Transaction] DROP CONSTRAINT fk_Transaction_Patient_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Organization_phone_no_Organization_ID')\par
+        ALTER TABLE Organization_phone_no DROP CONSTRAINT fk_Organization_phone_no_Organization_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Doctor_phone_no_Doctor_ID')\par
+        ALTER TABLE Doctor_phone_no DROP CONSTRAINT fk_Doctor_phone_no_Doctor_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Organization_head_Organization_ID')\par
+        ALTER TABLE Organization_head DROP CONSTRAINT fk_Organization_head_Organization_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_emergency_contacts_Patient_ID')\par
+        ALTER TABLE emergency_contacts DROP CONSTRAINT fk_emergency_contacts_Patient_ID\par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = 'fk_Patient_Blood_Group_Patient_ID ')\par
+        ALTER TABLE Patient_Blood_Group DROP CONSTRAINT fk_Patient_Blood_Group_Patient_ID \par
+\par
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS\par
+    WHERE CONSTRAINT_NAME = ' fk_Donor_Blood_Group_Donor_ID ')\par
+        ALTER TABLE Donor_Blood_Group DROP CONSTRAINT  fk_Donor_Blood_Group_Donor_ID\par
+        \par
+DROP TABLE IF EXISTS login\par
+DROP TABLE IF EXISTS [user]\par
+DROP TABLE IF EXISTS user_phone_no\par
+DROP TABLE IF EXISTS organization\par
+DROP TABLE IF EXISTS doctor\par
+DROP TABLE IF EXISTS patient\par
+DROP TABLE IF EXISTS donor\par
+DROP TABLE IF EXISTS organ_available\par
+DROP TABLE IF EXISTS [transaction]\par
+DROP TABLE IF EXISTS organization_phone_no\par
+DROP TABLE IF EXISTS doctor_phone_no\par
+DROP TABLE IF EXISTS organization_head\par
+DROP TABLE IF EXISTS emergency_contacts\par
+DROP TABLE IF EXISTS medical_insurance\par
+DROP TABLE IF EXISTS medical_insurance\par
+DROP TABLE IF EXISTS Patient_Blood_Group\par
+DROP TABLE IF EXISTS Donor_Blood_Group\par
+\par
+-- UP METADATA\par
+\par
+CREATE TABLE login\par
+(\par
+   username varchar(20) not null,\par
+   password varchar(20) not null\par
+)\par
+--table #1\par
+CREATE TABLE [User](\par
+    User_ID int NOT NULL,\par
+    Name varchar(20) NOT NULL,\par
+    Date_of_Birth date NOT NULL,\par
+    Medical_insurance int,\par
+    Medical_history varchar(20),\par
+    Street varchar(20),\par
+    City varchar(20),\par
+    State varchar(20),\par
+    CONSTRAINT pk_User_User_ID primary key (User_ID),\par
+)\par
+\par
+--table #2\par
+CREATE TABLE User_phone_no(\par
+   User_ID int NOT NULL,\par
+   phone_no varchar(15),\par
+  \par
+)\par
+alter table [User]\par
+   add CONSTRAINT fk_User_User_ID foreign key (User_ID)\par
+   references [User](User_ID)\par
+\par
+--table #3\par
+\par
+CREATE TABLE organization (\par
+    Organization_ID int NOT NULL,\par
+    Organization_name varchar(20) NOT NULL,\par
+    Location varchar(20),\par
+    Government_approved int, --0 or 1\par
+    Constraint pk_organization_Organization_ID primary key (Organization_ID),\par
+)\par
+\par
+--table #4\par
+\par
+CREATE TABLE Doctor(\par
+  Doctor_ID int NOT NULL,\par
+  Doctor_Name varchar(20) NOT NULL,\par
+  Department_Name varchar(20) NOT NULL,\par
+  organization_ID int NOT NULL,\par
+\par
+  Constraint pk_Doctor_Doctor_ID primary key (Doctor_ID)\par
+)\par
+ alter table  Doctor \par
+ add constraint  fk_Doctor_Organization_ID foreign key (Organization_ID)\par
+ references organization(Organization_ID)\par
+\par
+ --table #5\par
+\par
+ create table Patient (\par
+    Patient_ID int NOT NULL,\par
+    organ_req varchar(20) NOT NULL,\par
+    reason_of_procurement varchar(20),\par
+    Doctor_ID int NOT NULL,\par
+    User_ID int NOT NULL,\par
+    CONSTRAINT pk_Patient_Patient_ID primary key (Patient_ID),  \par
+   )\par
+ALTER TABLE Patient ADD CONSTRAINT fk_Patient_Doctor_ID foreign key (Doctor_ID)\par
+REFERENCES Doctor(Doctor_ID)\par
+\par
+ --table #6\par
+\par
+ CREATE TABLE Donor(\par
+    Donor_ID int NOT NULL,\par
+    organ_donated varchar(20) NOT NULL,\par
+    reason_of_donation varchar(20),\par
+    Organization_ID int NOT NULL,\par
+    User_ID int NOT NULL,\par
+    CONSTRAINT pk_Donor_Donor_ID primary key (Donor_ID)\par
+)\par
+ --1 fk\par
+ alter table Donor add constraint fk_Donor_Organization_ID foreign key (Organization_ID)\par
+ references organization(Organization_ID)\par
+ --2 fk\par
+alter table Donor add constraint fk_Donor_User_ID foreign key (User_ID)\par
+ references [User](User_ID)\par
+\par
+--table #7\par
+CREATE TABLE Organ_available(\par
+  Organ_ID int Identity NOT NULL,\par
+  Organ_name varchar(20) NOT NULL,\par
+  Donor_ID int NOT NULL,\par
+  CONSTRAINT pk_Organ_available_Organ_ID PRIMARY KEY (Organ_ID),\par
+)\par
+ALTER TABLE Organ_available ADD CONSTRAINT fk_Organ_available_Donor_ID foreign key (Donor_ID)\par
+REFERENCES Donor(Donor_ID)\par
+   \par
+ --table #8\par
+CREATE TABLE [Transaction](\par
+  Patient_ID int NOT NULL,\par
+  Organ_ID int NOT NULL,\par
+  Donor_ID int NOT NULL,\par
+  Date_of_transaction date NOT NULL,\par
+  Status int NOT NULL, --#0 or 1\par
+  CONSTRAINT pk_Transaction primary key (Patient_ID, Organ_ID),\par
+);\par
+   \par
+ Alter Table [Transaction] ADD CONSTRAINT fk_Transaction_Patient_ID FOREIGN KEY(Patient_ID) \par
+ REFERENCES Patient(Patient_ID)\par
+  \par
+ Alter Table [Transaction] ADD CONSTRAINT fk_Transaction_Donor_ID FOREIGN KEY(Donor_ID)\par
+ REFERENCES Donor(Donor_ID)\par
+   \par
+   \par
+ --table #9\par
+CREATE TABLE Organization_phone_no(\par
+  Organization_ID int NOT NULL,\par
+  Phone_no varchar(15),  \par
+);\par
+\par
+Alter Table Organization_phone_no ADD Constraint fk_Organization_phone_no_Organization_ID FOREIGN KEY(Organization_ID)\par
+REFERENCES Organization(Organization_ID)\par
+   \par
+   \par
+--table #10\par
+CREATE TABLE Doctor_phone_no(\par
+  Doctor_ID int NOT NULL,\par
+  Phone_no varchar(15),\par
+  \par
+);\par
+\par
+Alter Table Doctor_phone_no ADD Constraint fk_Doctor_phone_no_Doctor_ID FOREIGN KEY (Doctor_ID)\par
+REFERENCES Doctor(Doctor_ID)\par
+  \par
+--table #11\par
+CREATE TABLE Organization_head(\par
+  Organization_ID int NOT NULL,\par
+  Employee_ID int NOT NULL,\par
+  Name varchar(20) NOT NULL,\par
+  Date_of_joining date NOT NULL,\par
+  Term_length int NOT NULL,\par
+  CONSTRAINT pk_Organization_head primary key (Organization_ID, Employee_ID),\par
+ );\par
+ Alter Table Organization_head ADD Constraint fk_Organization_head_Organization_ID foreign key (Organization_ID) \par
+ References Organization(Organization_ID) \par
+\par
+ --table #12\par
+ CREATE TABLE emergency_contacts(\par
+    Patient_id INT IDENTITY NOT NULL,\par
+    emergency_contact_firstname VARCHAR(255) NOT NULL,\par
+    emergency_contact_lastname VARCHAR(255) NOT NULL,\par
+    emergency_contact_address VARCHAR(255) NOT NULL,\par
+    emergency_contact_email VARCHAR(255) NOT NULL,\par
+    CONSTRAINT pk_emergency_contacts_Patient_id PRIMARY KEY (Patient_id)\par
+)\par
+ALTER TABLE emergency_contacts\par
+    ADD CONSTRAINT fk_emergency_contacts_Patient_ID FOREIGN KEY (Patient_ID)\par
+        REFERENCES Patient(Patient_ID)\par
+\par
+--table #13\par
+CREATE TABLE Medical_insurance(\par
+    insurance_company VARCHAR(20) NOT NULL,\par
+    Transplantation_coverage VARCHAR(3) NOT NULL,\par
+)\par
+--table #14\par
+CREATE TABLE Patient_Blood_Group(\par
+    Patient_id INT IDENTITY NOT NULL,\par
+    Blood_Group VARCHAR(3),\par
+    CONSTRAINT pk_Patient_Blood_Group_Patient_id PRIMARY KEY (Patient_id),\par
+)\par
+ALTER TABLE Patient_Blood_Group ADD CONSTRAINT fk_Patient_Blood_Group_Patient_ID FOREIGN KEY (Patient_ID)\par
+        REFERENCES Patient(Patient_ID)\par
+\par
+--table #15\par
+CREATE TABLE Donor_Blood_Group(\par
+    Donor_id INT IDENTITY NOT NULL,\par
+    Blood_Group VARCHAR(3),\par
+    CONSTRAINT pk_Donor_Blood_Group_Donor_id PRIMARY KEY (Donor_id),\par
+)\par
+ALTER TABLE Donor_Blood_Group ADD CONSTRAINT fk_Donor_Blood_Group_Donor_ID FOREIGN KEY (Donor_ID)\par
+        REFERENCES Donor(Donor_ID)\par
+\par
+-- Show Table\par
+SELECT * FROM [USER];\par
+SELECT * FROM User_phone_no;\par
+SELECT * FROM organization;\par
+SELECT * FROM doctor;\par
+SELECT * FROM patient;\par
+SELECT * FROM donor;\par
+SELECT * FROM organ_available;\par
+SELECT * FROM [transaction];\par
+SELECT * FROM organization_phone_no;\par
+SELECT * FROM doctor_phone_no;\par
+SELECT * FROM organization_head;\par
+SELECT * from emergency_contacts;\par
+SELECT * FROM medical_insurance;\par
+SELECT * FROM Patient_Blood_Group;\par
+SELECT * FROM Donor_Blood_Group;\par
+}
+ 
